@@ -26,7 +26,65 @@ This commands includes
 • Other IP Commands e.g. show ip route etc.
 <BR>
 
-## Output
+~~~
+server.py
 
+import socket
+from pythonping import ping
+
+s = socket.socket()
+s.bind(('localhost', 8000))
+s.listen(5)
+print("Server listening on port 8000...")
+
+c, addr = s.accept()
+print(f"Connection from {addr}")
+
+while True:
+    try:
+        hostname = c.recv(1024).decode('utf-8')
+        if not hostname or hostname.lower() == 'exit':
+            print("Client disconnected.")
+            break
+
+        response = ping(hostname, verbose=False, count=4)
+        c.send(str(response).encode('utf-8'))
+
+    except Exception as e:
+        c.send(f"Ping failed: {e}".encode('utf-8'))
+
+c.close()
+
+client.py
+
+import socket
+
+s = socket.socket()
+s.connect(('localhost', 8000))
+
+while True:
+    ip = input("Enter the website you want to ping (or type 'exit' to quit): ")
+    s.send(ip.encode('utf-8'))
+
+    if ip.lower() == 'exit':
+        break
+
+    print(s.recv(4096).decode('utf-8'))
+
+s.close()
+~~~
+## Output
+<img width="1043" height="271" alt="image" src="https://github.com/user-attachments/assets/2aa2fcf9-28b9-46b5-a7da-f145aa5ecba5" />
+<img width="1026" height="661" alt="image" src="https://github.com/user-attachments/assets/5677253a-6bba-4c43-a4bd-216768a02c14" />
+traceroute
+<img width="1037" height="501" alt="image" src="https://github.com/user-attachments/assets/ae2b4f64-7917-4bb7-9233-63b8e95c5d42" />
+ipconfig
+<img width="1021" height="767" alt="image" src="https://github.com/user-attachments/assets/e82cee61-f6b8-414a-8e2a-12ec2e4df560" />
+nslookup
+<img width="770" height="747" alt="image" src="https://github.com/user-attachments/assets/af7ff60b-9853-42e2-b255-e11c26d6183c" />
+netstat
+<img width="740" height="497" alt="image" src="https://github.com/user-attachments/assets/78a6ce5c-90c4-41f8-853c-7a8feafec7a0" />
+tcdump
+<img width="811" height="500" alt="image" src="https://github.com/user-attachments/assets/2508d828-7d94-4270-b8bd-22c82883a0d6" />
 ## Result
 Thus Execution of Network commands Performed 
